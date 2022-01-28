@@ -37,7 +37,7 @@ const initializeData = async (apiData) => {
 // --- Entry Point: Repeatedly Called
 const requestAndUpdate = async (apiData, apiKeyList) => {
     try {
-        apiData.list.forEach(async (account, i) => {
+        apiData.list.forEach((account, i) => {
             console.log("Account Data To Be Requested: ", account);
             let requestedData;
             setTimeout(async function() {
@@ -300,7 +300,7 @@ const sendData = async (dataToSend) => {
     try {
         await appendFile(
             '/Users/zhenhaining/Documents/portfolio/personal-social-feed/backend/api'+'/update/update_list.txt', 
-            JSON.stringify(dataToSend) + '\n')
+            new Date().toISOString() + ' ' + JSON.stringify(dataToSend) + '\n')
     }
     catch (err) {
         console.log('Send Data Error: ', err)

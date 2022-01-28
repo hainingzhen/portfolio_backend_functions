@@ -7,13 +7,15 @@ const {
     openseaApiKeyList
 } = require('./api_keys')
 
+const { v4: uuidv4 } = require('uuid');
+
 
 const youtubeApiData = {
     requestInfo: {
         platform: 'youtube',
         filePath: __dirname + '/api_result/youtube.json',
         apiRoot: 'https://www.googleapis.com/youtube/v3/playlistItems?',
-        timeOut: 333,
+        timeOut: 500,
     },
     list: [
         {
@@ -31,31 +33,31 @@ const youtubeApiData = {
             accountId: 'UCqK_GSMbpiV8spgD3ZGloSw',
             uploadListId: 'UUqK_GSMbpiV8spgD3ZGloSw'
         },
-        // {
-        //     name: 'Marques Brownlee',
-        //     accountId: '',
-        //     uploadListId: ''
-        // },
-        // {
-        //     name: '',
-        //     accountId: '',
-        //     uploadListId: ''
-        // },
-        // {
-        //     name: '',
-        //     accountId: '',
-        //     uploadListId: ''
-        // },
-        // {
-        //     name: '',
-        //     accountId: '',
-        //     uploadListId: ''
-        // },
-        // {
-        //     name: '',
-        //     accountId: '',
-        //     uploadListId: ''
-        // },
+        {
+            name: 'Marques Brownlee',
+            accountId: 'UCBJycsmduvYEL83R_U4JriQ',
+            uploadListId: 'UUBJycsmduvYEL83R_U4JriQ'
+        },
+        {
+            name: 'IGN',
+            accountId: 'UCKy1dAqELo0zrOtPkf0eTMw',
+            uploadListId: 'UUKy1dAqELo0zrOtPkf0eTMw'
+        },
+        {
+            name: 'BBC News',
+            accountId: 'UC16niRr50-MSBwiO3YDb3RA',
+            uploadListId: 'UU16niRr50-MSBwiO3YDb3RA'
+        },
+        {
+            name: 'Nintendo',
+            accountId: 'UCGIY_O-8vW4rfX98KlMkvRg',
+            uploadListId: 'UUGIY_O-8vW4rfX98KlMkvRg'
+        },
+        {
+            name: 'Blockworks',
+            accountId: 'UCkrwgzhIBKccuDsi_SvZtnQ',
+            uploadListId: 'UUkrwgzhIBKccuDsi_SvZtnQ'
+        },
     ]
 }
 
@@ -67,7 +69,7 @@ const twitterApiData = {
             'https://api.twitter.com/2/users', 
             'https://api.twitter.com/2/tweets/counts/recent?query=from%3A'
         ],
-        timeOut: 333
+        timeOut: 500
     },
     list: [
         {
@@ -82,26 +84,26 @@ const twitterApiData = {
             name: 'TEDTalks',
             accountId: '15492359'
         },
-        // {
-        //     name: '',
-        //     accountId: ''
-        // },
-        // {
-        //     name: '',
-        //     accountId: ''
-        // },
-        // {
-        //     name: '',
-        //     accountId: ''
-        // },
-        // {
-        //     name: '',
-        //     accountId: ''
-        // },
-        // {
-        //     name: '',
-        //     accountId: ''
-        // },
+        {
+            name: 'MarcusRashford',
+            accountId: '734492654755577858'
+        },
+        {
+            name: 'IGN',
+            accountId: '18927441'
+        },
+        {
+            name: 'novaramedia',
+            accountId: '601148365'
+        },
+        {
+            name: 'BBCBreaking',
+            accountId: '5402612'
+        },
+        {
+            name: 'coinbureau',
+            accountId: '906230721513181184'
+        },
     ]
 }
 
@@ -115,16 +117,36 @@ const mediumApiData = {
     list: [
         {
             name: 'barackobama',
-            accountId: '463320'
+            accountId: '59640693-1304-436f-83ab-4c4fdaf8b42a'
         },
         {
             name: 'michael-thompson',
-            accountId: '335579811840000'
+            accountId: '6b1f7bc2-6a2d-47fc-b9a8-0474c0bd1456'
         },
         {
             name: 'zulie',
-            accountId: '294840'
-        }
+            accountId: '38fcf34a-a3e9-484c-8903-15ea8f2456bb'
+        },
+        {
+            name: 'netflixtechblog',
+            accountId: 'c805f152-dbd2-44b5-9b4b-89c1cd41f65e'
+        },
+        {
+            name: 'Pinterest_Engineering',
+            accountId: '7b2fbb00-8c66-4ca2-8b18-a6bb586be1e8'
+        },
+        {
+            name: 'gogalagames',
+            accountId: 'a07a1d2b-5a5f-4488-9d14-869b01abb555'
+        },
+        {
+            name: 'playbigtime',
+            accountId: 'fe5b4186-521d-46dd-b25a-ec3d1a7e04a9'
+        },
+        {
+            name: 'axieinfinity',
+            accountId: 'eb0eb172-86a7-49d1-af5b-c5152f731947'
+        },
     ]
 }
 
@@ -189,13 +211,13 @@ const start = async () => {
             console.log('==== YOUTUBE REQ ====')
             console.timeLog('Timer')
             requestAndUpdate(youtubeApiData, youtubeApiKeyList)
-        }, 84000)
+        }, 90000)
 
         setInterval(() => {
             console.log('==== TWITTER REQ ====')
             console.timeLog('Timer')
             requestAndUpdate(twitterApiData, twitterApiKeyList)
-        }, 132000)
+        }, 120000)
 
         setInterval(() => {
             console.log('==== MEDIUM REQ ====')
@@ -229,14 +251,14 @@ const start = async () => {
 // --- Test --- 
 const startTest = async () => {
     try {
-        // await initializeData(youtubeApiData)
-        // await initializeData(twitterApiData)
-        // await initializeData(mediumApiData)
-        // await initializeData(snapshotApiData)
-        // await initializeData(openseaApiData)
+        await initializeData(youtubeApiData)
+        await initializeData(twitterApiData)
+        await initializeData(mediumApiData)
+        await initializeData(snapshotApiData)
+        await initializeData(openseaApiData)
         
-        // await requestAndUpdate(youtubeApiData, youtubeApiKeyList)
-        await requestAndUpdate(twitterApiData, twitterApiKeyList)
+        await requestAndUpdate(youtubeApiData, youtubeApiKeyList)
+        // await requestAndUpdate(twitterApiData, twitterApiKeyList)
         // await requestAndUpdate(mediumApiData, mediumApiKeyList)
         // await requestAndUpdate(snapshotApiData, snapshotApiKeyList)
         // await requestAndUpdate(openseaApiData, openseaApiKeyList)
@@ -250,3 +272,5 @@ const startTest = async () => {
 startTest()
 
 // console.log(new Date().toISOString())
+
+// console.log(uuidv4())
