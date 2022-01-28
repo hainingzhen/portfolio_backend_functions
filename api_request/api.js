@@ -1,8 +1,8 @@
-const axios = require('axios')
-const { v4: uuidv4 } = require('uuid')
-const { readFile, writeFile, appendFile } = require('fs').promises
-let Parser = require('rss-parser')
-let parser = new Parser()
+const axios = require('axios');
+const { v4: uuidv4 } = require('uuid');
+const { readFile, writeFile, appendFile } = require('fs').promises;
+let Parser = require('rss-parser');
+let parser = new Parser();
 
 let apiStatus = {
     youtube: 'notRunning',
@@ -10,74 +10,98 @@ let apiStatus = {
     medium: 'notRunning',
     snapshot: 'notRunning',
     opensea: 'notRunning'
-}
+};
+
 
 // --- Entry Point: Called Once
-const initializeData = async (accountList) => {
+const initializeData = async (apiData) => {
     try {
-        const data = accountList.list.map((account) => {
+        const data = apiData.list.map((account) => {
             return {
                 name: account.name,
                 accountId: account.accountId ? account.accountId : null,
                 uploadListId: account.uploadListId ? account.uploadListId : null,
+                lastEdited: null,
+                lastRequested: null,
                 content: null,
-            }
-        })
-        await writeFile(accountList.filePath, JSON.stringify(data))
+            };
+        });
+        await writeFile(apiData.requestInfo.filePath, JSON.stringify(data));
     }
     catch (error) {
-        console.log("Initialisation error: ", error)  
+        console.log("Initialisation error: ", error);
     }
-}
+};
 
 
 // --- Entry Point: Repeatedly Called
-const requestAndUpdate = async (accountList, apiKeyList) => {
+const requestAndUpdate = async (apiData, apiKeyList) => {
     try {
-        accountList.list.forEach(async (account, i) => {
-            console.log("Account Data To Be Requested: ", account)
-            let requestedData
+        apiData.list.forEach(async (account, i) => {
+            console.log("Account Data To Be Requested: ", account);
+            let requestedData;
             setTimeout(async function() {
-                requestedData = await request(accountList, account, apiKeyList)
+                requestedData = await request(apiData.requestInfo, account, apiKeyList);
                 if (requestedData !== null) {
-                    await update(accountList, account, requestedData)
-                }
-            }, i * accountList.timeout)
-        })
+                    await update(apiData.requestInfo, account, requestedData);
+                };
+            }, i * apiData.requestInfo.timeOut);
+        });
     }
     catch (error) {
-        console.log("Request & Update Error: ", error)
+        console.log("Request & Update Error: ", error);
     }
-}
+};
 
 
 // Called By: requestAndUpdate
-const request = async (accountList, account, apiKeyList) => {
+const request = async (requestInfo, account, apiKeyList) => {
     try {
-        let apiQuery = ''
-        let config = {}
-        let response = {}
-        switch(accountList.platform){
+        let currentData = await readFile(requestInfo.filePath, 'utf8');
+        currentData = JSON.parse(currentData);
+        let lastRequestTime;
+        for (let i = 0; i < currentData.length; i++){
+            if (currentData[i].accountId === account.accountId){
+                lastRequestTime = currentData[i].lastRequested;
+                break;
+            };
+        };
+        let apiQuery = '';
+        let config = {};
+        let response = {};
+        const requestTime = new Date().toISOString();
+        switch(requestInfo.platform){
             case 'youtube':
-                apiQuery = `&part=snippet&maxResults=2&playlistId=${account.uploadListId}&key=${apiKeyList[0]}`
-                response = await axios.get(accountList.apiRoot.concat(apiQuery))
-                break
+                apiQuery = `&part=snippet&maxResults=2&playlistId=${account.uploadListId}&key=${apiKeyList[0]}`;
+                response = await axios.get(requestInfo.apiRoot.concat(apiQuery));
+                break;
             case 'twitter':
-                apiQuery = `/${account.accountId}/tweets?tweet.fields=created_at,entities&max_results=5`
                 config = {
                     headers: {
                         'Authorization': `Bearer ${apiKeyList[0]}`
                     }
+                };
+                if (lastRequestTime !== null){
+                    apiQuery = `${account.name}&start_time=${lastRequestTime}&granularity=day`;
+                    response = await axios.get(requestInfo.apiRoot[1].concat(apiQuery), config);
+                    console.log(response.data.meta.total_tweet_count)
+                    if (response.status === 200 && response.data.meta.total_tweet_count === 0){
+                        response = {
+                            status: null
+                        }
+                        break;
+                    }
                 }
-                response = await axios.get(accountList.apiRoot.concat(apiQuery), config)
-                break
+                apiQuery = `/${account.accountId}/tweets?tweet.fields=created_at,entities&max_results=5`;
+                response = await axios.get(requestInfo.apiRoot[0].concat(apiQuery), config);
+                break;
             case 'medium':
-                apiQuery = `${account.name}`
-                response = await axios.get(accountList.apiRoot.concat(apiQuery))
-                break
+                apiQuery = `${account.name}`;
+                response = await axios.get(requestInfo.apiRoot.concat(apiQuery));
+                break;
             case 'snapshot':
                 response = await axios({
-                    url: accountList.apiRoot,
+                    url: requestInfo.apiRoot,
                     method: 'get',
                     data: {
                         query : `
@@ -100,38 +124,46 @@ const request = async (accountList, account, apiKeyList) => {
                             }
                         `
                     }
-                })
-                break
+                });
+                break;
             case 'opensea':
-                response = await axios.get(accountList.apiRoot.concat(account.name))
-                break
+                response = await axios.get(requestInfo.apiRoot.concat(account.name));
+                break;
             default:
-                console.log('Platform Error: Platform does not exist.')
-                return null
+                console.log('Platform Error: Platform does not exist.');
+                return null;
         }
-        console.log(response.status)
+
+        for (let i = 0; i < currentData.length; i++){
+            if (currentData[i].accountId === account.accountId){
+                currentData[i].lastRequested = requestTime;
+            };
+        };
+        await writeFile(requestInfo.filePath, JSON.stringify(currentData));
+
+        console.log(response.status);
         if (response && response.status === 200){
-            return response.data
+            return response.data;
         } 
         else {
-            return null
+            return null;
         }
     }
     catch (error) {
-        console.log("Request Error: ", error)
+        console.log("Request Error: ", error);
     }
 }
 
 
 // Called By: requestAndUpdate
-const update = async (accountList, account, requestedData) => {
+const update = async (requestInfo, account, requestedData) => {
     try {
-        let formattedContent
-        switch(accountList.platform){
+        let formattedContent;
+        switch(requestInfo.platform){
             case 'youtube':
                 formattedContent = requestedData.items.map(item => {
                     return {
-                        platform: accountList.platform,
+                        platform: requestInfo.platform,
                         accountTitle: item.snippet.channelTitle,
                         accountId: item.snippet.channelId,
                         id: item.id,
@@ -145,7 +177,7 @@ const update = async (accountList, account, requestedData) => {
             case 'twitter':
                 formattedContent = requestedData.data.map(item => {
                     return {
-                        platform: accountList.platform,
+                        platform: requestInfo.platform,
                         accountTitle: account.name,
                         accountId: account.accountId,
                         id: item.id,
@@ -158,7 +190,7 @@ const update = async (accountList, account, requestedData) => {
                 requestedData = await parser.parseString(requestedData)
                 formattedContent = requestedData.items.map(item => {
                     return {
-                        platform: accountList.platform,
+                        platform: requestInfo.platform,
                         accountTitle: account.name,
                         accountId: account.accountId,
                         id: item.guid,
@@ -171,7 +203,7 @@ const update = async (accountList, account, requestedData) => {
             case 'snapshot':
                 formattedContent = requestedData.data.proposals.map(proposal => {
                     return {
-                        platform: accountList.platform,
+                        platform: requestInfo.platform,
                         accountTitle: account.name,
                         accountId: account.accountId,
                         id: proposal.id,
@@ -184,7 +216,7 @@ const update = async (accountList, account, requestedData) => {
                 break
             case 'opensea':
                 formattedContent = {
-                    platform: accountList.platform,
+                    platform: requestInfo.platform,
                     accountTitle: account.name,
                     accountId: account.accountId,
                     contentTitle: requestedData.collection.name,
@@ -197,11 +229,17 @@ const update = async (accountList, account, requestedData) => {
                 break
         }
 
-        const { newData, currentData } = await compare(accountList, formattedContent)
+        const { newData, currentData } = await compare(requestInfo, formattedContent)
 
         if (newData.length > 0) {
             await sendData(newData)
-            await writeFile(accountList.filePath, JSON.stringify(currentData))
+            for (let i = 0; i < currentData.length; i++){
+                if (currentData[i].accountId === account.accountId){
+                    currentData[i].lastEdited = new Date().toISOString()
+                    break
+                }
+            }
+            await writeFile(requestInfo.filePath, JSON.stringify(currentData))
             // console.log('Need to write file: ', currentData[0])
         }
     }
@@ -211,9 +249,9 @@ const update = async (accountList, account, requestedData) => {
 }
 
 
-const compare = async (accountList, formattedContent) => {
+const compare = async (requestInfo, formattedContent) => {
     try {
-        let currentData = await readFile(accountList.filePath, 'utf8')
+        let currentData = await readFile(requestInfo.filePath, 'utf8')
         currentData = JSON.parse(currentData)
         const isArray = Array.isArray(formattedContent)
         const id = isArray ? formattedContent[0].accountId : formattedContent.accountId
@@ -228,7 +266,7 @@ const compare = async (accountList, formattedContent) => {
         }
         // console.log('Current Data To be Compared: ', currentDataToBeCompared)
         if (currentDataToBeCompared === null) {
-            await writeFile(accountList.filePath, JSON.stringify(currentData))
+            await writeFile(requestInfo.filePath, JSON.stringify(currentData))
             return { newData, currentData }
         }
         if (isArray){

@@ -8,11 +8,13 @@ const {
 } = require('./api_keys')
 
 
-const youtubeAccountList = {
-    platform: 'youtube',
-    filePath: __dirname + '/api_result/youtube.json',
-    apiRoot: 'https://www.googleapis.com/youtube/v3/playlistItems?',
-    timeout: 333,
+const youtubeApiData = {
+    requestInfo: {
+        platform: 'youtube',
+        filePath: __dirname + '/api_result/youtube.json',
+        apiRoot: 'https://www.googleapis.com/youtube/v3/playlistItems?',
+        timeOut: 333,
+    },
     list: [
         {
             name: 'freeCodeCamp',
@@ -29,14 +31,44 @@ const youtubeAccountList = {
             accountId: 'UCqK_GSMbpiV8spgD3ZGloSw',
             uploadListId: 'UUqK_GSMbpiV8spgD3ZGloSw'
         },
+        // {
+        //     name: 'Marques Brownlee',
+        //     accountId: '',
+        //     uploadListId: ''
+        // },
+        // {
+        //     name: '',
+        //     accountId: '',
+        //     uploadListId: ''
+        // },
+        // {
+        //     name: '',
+        //     accountId: '',
+        //     uploadListId: ''
+        // },
+        // {
+        //     name: '',
+        //     accountId: '',
+        //     uploadListId: ''
+        // },
+        // {
+        //     name: '',
+        //     accountId: '',
+        //     uploadListId: ''
+        // },
     ]
 }
 
-const twitterAccountList = {
-    platform: 'twitter',
-    filePath: __dirname + '/api_result/twitter.json',
-    apiRoot: 'https://api.twitter.com/2/users',
-    timeout: 333,
+const twitterApiData = {
+    requestInfo: {
+        platform: 'twitter',
+        filePath: __dirname + '/api_result/twitter.json',
+        apiRoot: [
+            'https://api.twitter.com/2/users', 
+            'https://api.twitter.com/2/tweets/counts/recent?query=from%3A'
+        ],
+        timeOut: 333
+    },
     list: [
         {
             name: 'MichelleObama',
@@ -49,15 +81,37 @@ const twitterAccountList = {
         {
             name: 'TEDTalks',
             accountId: '15492359'
-        }
+        },
+        // {
+        //     name: '',
+        //     accountId: ''
+        // },
+        // {
+        //     name: '',
+        //     accountId: ''
+        // },
+        // {
+        //     name: '',
+        //     accountId: ''
+        // },
+        // {
+        //     name: '',
+        //     accountId: ''
+        // },
+        // {
+        //     name: '',
+        //     accountId: ''
+        // },
     ]
 }
 
-const mediumAccountList = {
-    platform: 'medium',
-    filePath: __dirname + '/api_result/medium.json',
-    apiRoot: 'https://medium.com/feed/@',
-    timeout: 500,
+const mediumApiData = {
+    requestInfo: {
+        platform: 'medium',
+        filePath: __dirname + '/api_result/medium.json',
+        apiRoot: 'https://medium.com/feed/@',
+        timeOut: 500,
+    },
     list: [
         {
             name: 'barackobama',
@@ -74,11 +128,13 @@ const mediumAccountList = {
     ]
 }
 
-const snapshotAccountList = {
-    platform: 'snapshot',
-    filePath: __dirname + '/api_result/snapshot.json',
-    apiRoot: 'https://hub.snapshot.org/graphql',
-    timeout: 500,
+const snapshotApiData = {
+    requestInfo: {
+        platform: 'snapshot',
+        filePath: __dirname + '/api_result/snapshot.json',
+        apiRoot: 'https://hub.snapshot.org/graphql',
+        timeOut: 500,
+    },
     list: [
         {
             name: 'ilvgov.eth',
@@ -95,11 +151,13 @@ const snapshotAccountList = {
     ]
 }
 
-const openseaAccountList = {
-    platform: 'opensea',
-    filePath: __dirname + '/api_result/opensea.json',
-    apiRoot: 'https://api.opensea.io/api/v1/collection/',
-    timeout: 10000,
+const openseaApiData = {
+    requestInfo: {
+        platform: 'opensea',
+        filePath: __dirname + '/api_result/opensea.json',
+        apiRoot: 'https://api.opensea.io/api/v1/collection/',
+        timeOut: 10000,
+    },
     list: [
         {
             name: 'boredapeyachtclub',
@@ -119,42 +177,42 @@ const openseaAccountList = {
 
 const start = async () => {
     try {
-        await initializeData(youtubeAccountList)
-        await initializeData(twitterAccountList)
-        await initializeData(mediumAccountList)
-        await initializeData(snapshotAccountList)
-        await initializeData(openseaAccountList)
+        await initializeData(youtubeApiData)
+        await initializeData(twitterApiData)
+        await initializeData(mediumApiData)
+        await initializeData(snapshotApiData)
+        await initializeData(openseaApiData)
 
         console.time('Timer')
 
         setInterval(() => {
             console.log('==== YOUTUBE REQ ====')
             console.timeLog('Timer')
-            requestAndUpdate(youtubeAccountList, youtubeApiKeyList)
+            requestAndUpdate(youtubeApiData, youtubeApiKeyList)
         }, 84000)
 
         setInterval(() => {
             console.log('==== TWITTER REQ ====')
             console.timeLog('Timer')
-            requestAndUpdate(twitterAccountList, twitterApiKeyList)
+            requestAndUpdate(twitterApiData, twitterApiKeyList)
         }, 132000)
 
         setInterval(() => {
             console.log('==== MEDIUM REQ ====')
             console.timeLog('Timer')
-            requestAndUpdate(mediumAccountList, mediumApiKeyList)
+            requestAndUpdate(mediumApiData, mediumApiKeyList)
         }, 300000)
 
         setInterval(() => {
             console.log('==== OPEN SEA REQ ====')
             console.timeLog('Timer')
-            requestAndUpdate(openseaAccountList, openseaApiKeyList)
+            requestAndUpdate(openseaApiData, openseaApiKeyList)
         }, 900000)
 
         setInterval(() => {
             console.log('==== SNAPSHOT REQ ====')
             console.timeLog('Timer')
-            requestAndUpdate(snapshotAccountList, snapshotApiKeyList)
+            requestAndUpdate(snapshotApiData, snapshotApiKeyList)
         }, 600000)
     }
     catch (err) {
@@ -163,7 +221,7 @@ const start = async () => {
     }
 }
 
-start()
+// start()
 
 
 // --- Test ---
@@ -171,16 +229,17 @@ start()
 // --- Test --- 
 const startTest = async () => {
     try {
-        // await initializeData(youtubeAccountList)
-        // await requestAndUpdate(youtubeAccountList, youtubeApiKeyList)
-        // await initializeData(twitterAccountList)
-        // await requestAndUpdate(twitterAccountList, twitterApiKeyList)
-        // await initializeData(mediumAccountList)
-        // await requestAndUpdate(mediumAccountList, mediumApiKeyList)
-        // await initializeData(snapshotAccountList)
-        // await requestAndUpdate(snapshotAccountList, snapshotApiKeyList)
-        // await initializeData(openseaAccountList)
-        // await requestAndUpdate(openseaAccountList, openseaApiKeyList)
+        // await initializeData(youtubeApiData)
+        // await initializeData(twitterApiData)
+        // await initializeData(mediumApiData)
+        // await initializeData(snapshotApiData)
+        // await initializeData(openseaApiData)
+        
+        // await requestAndUpdate(youtubeApiData, youtubeApiKeyList)
+        await requestAndUpdate(twitterApiData, twitterApiKeyList)
+        // await requestAndUpdate(mediumApiData, mediumApiKeyList)
+        // await requestAndUpdate(snapshotApiData, snapshotApiKeyList)
+        // await requestAndUpdate(openseaApiData, openseaApiKeyList)
     }
     catch (err) {
         console.log(err)
@@ -188,4 +247,6 @@ const startTest = async () => {
     
 }
 
-// startTest()
+startTest()
+
+// console.log(new Date().toISOString())
