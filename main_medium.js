@@ -6,7 +6,7 @@ const mediumApiData = {
         platform: 'medium',
         filePath: __dirname + '/api_result/medium.json',
         apiRoot: 'https://medium.com/feed/@',
-        timeOut: 500,
+        timeOut: 600,
     },
     list: [
         {

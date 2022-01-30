@@ -43,7 +43,7 @@ const start = async () => {
     }
 }
 
-// start()
+start()
 
 
 const startTest = async () => {
