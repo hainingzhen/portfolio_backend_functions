@@ -1,3 +1,4 @@
 /node_modules
+/service_account
 api_keys.js
 .DS_Store
