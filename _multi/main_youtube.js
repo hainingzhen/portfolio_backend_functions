@@ -1,5 +1,5 @@
-const { requestAndUpdate, initializeData } = require('./api_request/api')
-const { youtubeApiKeyList } = require('./api_keys')
+const { requestAndUpdate, initializeData } = require('../api_request/api')
+const { youtubeApiKeyList } = require('../api_keys')
 
 const youtubeApiData = {
     requestInfo: {

@@ -1,5 +1,5 @@
-const { requestAndUpdate, initializeData } = require('./api_request/api')
-const { mediumApiKeyList } = require('./api_keys')
+const { requestAndUpdate, initializeData } = require('../api_request/api')
+const { mediumApiKeyList } = require('../api_keys')
 
 const mediumApiData = {
     requestInfo: {

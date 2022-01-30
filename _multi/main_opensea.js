@@ -1,5 +1,5 @@
-const { requestAndUpdate, initializeData } = require('./api_request/api')
-const { openseaApiKeyList } = require('./api_keys')
+const { requestAndUpdate, initializeData } = require('../api_request/api')
+const { openseaApiKeyList } = require('../api_keys')
 
 const openseaApiData = {
     requestInfo: {

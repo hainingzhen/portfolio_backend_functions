@@ -200,7 +200,7 @@ const update = async (apiData, accountIndex, requestedData) => {
                         id: proposal.id,
                         contentTitle: proposal.title,
                         contentLink: `https://snapshot.org/#/${account.name}/proposal/${proposal.id}`,
-                        status: proposal.status,
+                        state: proposal.state,
                         daoLink: `https://snapshot.org/#/${account.name}`
                     }
                 })
@@ -223,8 +223,10 @@ const update = async (apiData, accountIndex, requestedData) => {
         const newData = await compare(accountIndex, formattedContent)
 
         if (newData.length) {
+            console.log('New Data Obtained')
             currentData[accountIndex].lastEdited = new Date().toISOString()
             await updateToFirestore(newData)
+            console.log(newData)
         }
     }
     catch (err) {
@@ -239,6 +241,7 @@ const compare = async (accountIndex, formattedContent) => {
         let currentDataToBeCompared = currentData[accountIndex].content
         currentData[accountIndex].content = formattedContent
         if (currentDataToBeCompared === null) {
+            console.log('Initial Fill')
             return isArray ? formattedContent : [formattedContent]
         }
         const id = isArray ? formattedContent[0].accountId : formattedContent.accountId

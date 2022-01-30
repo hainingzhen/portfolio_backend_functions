@@ -1,5 +1,4 @@
 const { requestAndUpdate, initializeData } = require('./api_request/api');
-// const { initializeData } = require('./api_request/api_rewrite');
 const { 
     youtubeApiKeyList, 
     twitterApiKeyList, 
@@ -16,7 +15,7 @@ const youtubeApiData = {
         platform: 'youtube',
         filePath: __dirname + '/api_result/youtube.json',
         apiRoot: 'https://www.googleapis.com/youtube/v3/playlistItems?',
-        timeOut: 500,
+        timeOut: 600,
     },
     list: [
         {
@@ -70,7 +69,7 @@ const twitterApiData = {
             'https://api.twitter.com/2/users', 
             'https://api.twitter.com/2/tweets/counts/recent?query=from%3A'
         ],
-        timeOut: 500
+        timeOut: 600
     },
     list: [
         {
@@ -113,7 +112,7 @@ const mediumApiData = {
         platform: 'medium',
         filePath: __dirname + '/api_result/medium.json',
         apiRoot: 'https://medium.com/feed/@',
-        timeOut: 500,
+        timeOut: 600,
     },
     list: [
         {
@@ -278,7 +277,7 @@ const startTest = async () => {
         // await initializeData(snapshotApiData)
         // await initializeData(openseaApiData)
         
-        // await requestAndUpdate(youtubeApiData, youtubeApiKeyList)
+        await requestAndUpdate(youtubeApiData, youtubeApiKeyList)
         // await requestAndUpdate(twitterApiData, twitterApiKeyList)
         // await requestAndUpdate(mediumApiData, mediumApiKeyList)
         // await requestAndUpdate(snapshotApiData, snapshotApiKeyList)

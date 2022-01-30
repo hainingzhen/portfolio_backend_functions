@@ -1,5 +1,5 @@
-const { requestAndUpdate, initializeData } = require('./api_request/api')
-const { snapshotApiKeyList } = require('./api_keys')
+const { requestAndUpdate, initializeData } = require('../api_request/api')
+const { snapshotApiKeyList } = require('../api_keys')
 
 const snapshotApiData = {
     requestInfo: {
