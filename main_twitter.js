@@ -1,5 +1,5 @@
-const { requestAndUpdate, initializeData } = require('../api_request/api')
-const { twitterApiKeyList } = require('../api_keys')
+const { requestAndUpdate, initializeData } = require('./api_request/api')
+const { twitterApiKeyList } = require('./api_keys')
 
 const twitterApiData = {
     requestInfo: {
@@ -9,7 +9,7 @@ const twitterApiData = {
             'https://api.twitter.com/2/users', 
             'https://api.twitter.com/2/tweets/counts/recent?query=from%3A'
         ],
-        timeOut: 500
+        timeOut: 2000
     },
     list: [
         {
@@ -48,21 +48,20 @@ const twitterApiData = {
 }
 
 
-const start = async () => {
+const start = () => {
     try {
-        await initializeData(twitterApiData)
+        initializeData(twitterApiData)
 
         console.time('Timer')
         
         setInterval(() => {
-            console.log('==== TWITTER REQ ====')
+            console.log('==== TWITTER ====')
             console.timeLog('Timer')
             requestAndUpdate(twitterApiData, twitterApiKeyList)
         }, 120000)
     }
     catch (err) {
         console.log(err)
-        console.timeEnd('Timer')
     }
 }
 

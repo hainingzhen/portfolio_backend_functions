@@ -1,12 +1,12 @@
-const { requestAndUpdate, initializeData } = require('../api_request/api')
-const { mediumApiKeyList } = require('../api_keys')
+const { requestAndUpdate, initializeData } = require('./api_request/api')
+const { mediumApiKeyList } = require('./api_keys')
 
 const mediumApiData = {
     requestInfo: {
         platform: 'medium',
         filePath: __dirname + '/api_result/medium.json',
         apiRoot: 'https://medium.com/feed/@',
-        timeOut: 600,
+        timeOut: 2000,
     },
     list: [
         {
@@ -45,21 +45,20 @@ const mediumApiData = {
 }
 
 
-const start = async () => {
+const start = () => {
     try {
-        await initializeData(mediumApiData)
+        initializeData(mediumApiData)
 
         console.time('Timer')
 
         setInterval(() => {
-            console.log('==== MEDIUM REQ ====')
+            console.log('==== MEDIUM ====')
             console.timeLog('Timer')
             requestAndUpdate(mediumApiData, mediumApiKeyList)
         }, 300000)
     }
     catch (err) {
         console.log(err)
-        console.timeEnd('Timer')
     }
 }
 

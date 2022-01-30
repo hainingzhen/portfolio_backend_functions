@@ -1,12 +1,12 @@
-const { requestAndUpdate, initializeData } = require('../api_request/api')
-const { youtubeApiKeyList } = require('../api_keys')
+const { requestAndUpdate, initializeData } = require('./api_request/api')
+const { youtubeApiKeyList } = require('./api_keys')
 
 const youtubeApiData = {
     requestInfo: {
         platform: 'youtube',
-        filePath: __dirname + '/api_result/youtube.json',
+        filePath: __dirname + '../api_result/youtube.json',
         apiRoot: 'https://www.googleapis.com/youtube/v3/playlistItems?',
-        timeOut: 500,
+        timeOut: 2000,
     },
     list: [
         {
@@ -52,21 +52,20 @@ const youtubeApiData = {
     ]
 }
 
-const start = async () => {
+const start = () => {
     try {
-        await initializeData(youtubeApiData)
+        initializeData(youtubeApiData)
 
         console.time('Timer')
 
         setInterval(() => {
-            console.log('==== YOUTUBE REQ ====')
+            console.log('==== YOUTUBE ====')
             console.timeLog('Timer')
             requestAndUpdate(youtubeApiData, youtubeApiKeyList)
         }, 90000)
     }
     catch (err) {
         console.log(err)
-        console.timeEnd('Timer')
     }
 }
 

@@ -13,7 +13,7 @@ const { v4: uuidv4 } = require('uuid');
 const youtubeApiData = {
     requestInfo: {
         platform: 'youtube',
-        filePath: __dirname + '/api_result/youtube.json',
+        filePath: __dirname + '/../api_result/youtube.json',
         apiRoot: 'https://www.googleapis.com/youtube/v3/playlistItems?',
         timeOut: 600,
     },
@@ -219,43 +219,52 @@ const openseaApiData = {
 
 const start = async () => {
     try {
-        await initializeData(youtubeApiData)
-        await initializeData(twitterApiData)
-        await initializeData(mediumApiData)
-        await initializeData(snapshotApiData)
-        await initializeData(openseaApiData)
 
-        console.time('Timer')
+        console.log(youtubeApiData.requestInfo.filePath)
 
-        setInterval(() => {
-            console.log('==== YOUTUBE REQ ====')
-            console.timeLog('Timer')
-            requestAndUpdate(youtubeApiData, youtubeApiKeyList)
-        }, 90000)
+        // await initializeData(youtubeApiData)
+        // await initializeData(twitterApiData)
+        // await initializeData(mediumApiData)
+        // await initializeData(snapshotApiData)
+        // await initializeData(openseaApiData)
 
-        setInterval(() => {
-            console.log('==== TWITTER REQ ====')
-            console.timeLog('Timer')
-            requestAndUpdate(twitterApiData, twitterApiKeyList)
-        }, 120000)
+        // await requestAndUpdate(youtubeApiData, youtubeApiKeyList)
+        // await requestAndUpdate(twitterApiData, twitterApiKeyList)
+        // await requestAndUpdate(mediumApiData, mediumApiKeyList)
+        // await requestAndUpdate(snapshotApiData, snapshotApiKeyList)
+        // await requestAndUpdate(openseaApiData, openseaApiKeyList)
 
-        setInterval(() => {
-            console.log('==== MEDIUM REQ ====')
-            console.timeLog('Timer')
-            requestAndUpdate(mediumApiData, mediumApiKeyList)
-        }, 300000)
+        // console.time('Timer')
 
-        setInterval(() => {
-            console.log('==== OPEN SEA REQ ====')
-            console.timeLog('Timer')
-            requestAndUpdate(openseaApiData, openseaApiKeyList)
-        }, 900000)
+        // setInterval(() => {
+        //     console.log('==== YOUTUBE REQ ====')
+        //     console.timeLog('Timer')
+        //     requestAndUpdate(youtubeApiData, youtubeApiKeyList)
+        // }, 10000)
 
-        setInterval(() => {
-            console.log('==== SNAPSHOT REQ ====')
-            console.timeLog('Timer')
-            requestAndUpdate(snapshotApiData, snapshotApiKeyList)
-        }, 600000)
+        // setInterval(() => {
+        //     console.log('==== TWITTER REQ ====')
+        //     console.timeLog('Timer')
+        //     requestAndUpdate(twitterApiData, twitterApiKeyList)
+        // }, 120000)
+
+        // setInterval(() => {
+        //     console.log('==== MEDIUM REQ ====')
+        //     console.timeLog('Timer')
+        //     requestAndUpdate(mediumApiData, mediumApiKeyList)
+        // }, 300000)
+
+        // setInterval(() => {
+        //     console.log('==== OPEN SEA REQ ====')
+        //     console.timeLog('Timer')
+        //     requestAndUpdate(openseaApiData, openseaApiKeyList)
+        // }, 900000)
+
+        // setInterval(() => {
+        //     console.log('==== SNAPSHOT REQ ====')
+        //     console.timeLog('Timer')
+        //     requestAndUpdate(snapshotApiData, snapshotApiKeyList)
+        // }, 600000)
     }
     catch (err) {
         console.log(err)
@@ -263,33 +272,7 @@ const start = async () => {
     }
 }
 
-// start()
-
-
-// --- Test ---
-// --- Test ---
-// --- Test --- 
-const startTest = async () => {
-    try {
-        // await initializeData(youtubeApiData)
-        // await initializeData(twitterApiData)
-        // await initializeData(mediumApiData)
-        // await initializeData(snapshotApiData)
-        // await initializeData(openseaApiData)
-        
-        await requestAndUpdate(youtubeApiData, youtubeApiKeyList)
-        // await requestAndUpdate(twitterApiData, twitterApiKeyList)
-        // await requestAndUpdate(mediumApiData, mediumApiKeyList)
-        // await requestAndUpdate(snapshotApiData, snapshotApiKeyList)
-        // await requestAndUpdate(openseaApiData, openseaApiKeyList)
-    }
-    catch (err) {
-        console.log(err)
-    }
-    
-}
-
-startTest()
+start()
 
 // console.log(new Date().toISOString())
 

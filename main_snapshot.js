@@ -1,12 +1,12 @@
-const { requestAndUpdate, initializeData } = require('../api_request/api')
-const { snapshotApiKeyList } = require('../api_keys')
+const { requestAndUpdate, initializeData } = require('./api_request/api')
+const { snapshotApiKeyList } = require('./api_keys')
 
 const snapshotApiData = {
     requestInfo: {
         platform: 'snapshot',
         filePath: __dirname + '/api_result/snapshot.json',
         apiRoot: 'https://hub.snapshot.org/graphql',
-        timeOut: 700,
+        timeOut: 2000,
     },
     list: [
         {
@@ -45,36 +45,21 @@ const snapshotApiData = {
 }
 
 
-const start = async () => {
+const start = () => {
     try {
-        await initializeData(snapshotApiData)
+        initializeData(snapshotApiData)
 
         console.time('Timer')
 
         setInterval(() => {
-            console.log('==== SNAPSHOT REQ ====')
+            console.log('==== SNAPSHOT ====')
             console.timeLog('Timer')
             requestAndUpdate(snapshotApiData, snapshotApiKeyList)
         }, 600000)
     }
     catch (err) {
         console.log(err)
-        console.timeEnd('Timer')
     }
 }
 
 start()
-
-const startTest = async () => {
-    try {
-        await initializeData(snapshotApiData)
-        
-        await requestAndUpdate(snapshotApiData, snapshotApiKeyList)
-    }
-    catch (err) {
-        console.log(err)
-    }
-    
-}
-
-// startTest()

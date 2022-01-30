@@ -1,12 +1,12 @@
-const { requestAndUpdate, initializeData } = require('../api_request/api')
-const { openseaApiKeyList } = require('../api_keys')
+const { requestAndUpdate, initializeData } = require('./api_request/api')
+const { openseaApiKeyList } = require('./api_keys')
 
 const openseaApiData = {
     requestInfo: {
         platform: 'opensea',
         filePath: __dirname + '/api_result/opensea.json',
         apiRoot: 'https://api.opensea.io/api/v1/collection/',
-        timeOut: 10000,
+        timeOut: 12000,
     },
     list: [
         {
@@ -25,37 +25,21 @@ const openseaApiData = {
 }
 
 
-const start = async () => {
+const start = () => {
     try {
-        await initializeData(openseaApiData)
+        initializeData(openseaApiData)
 
         console.time('Timer')
 
         setInterval(() => {
-            console.log('==== OPEN SEA REQ ====')
+            console.log('==== OPENSEA ====')
             console.timeLog('Timer')
             requestAndUpdate(openseaApiData, openseaApiKeyList)
         }, 900000)
     }
     catch (err) {
         console.log(err)
-        console.timeEnd('Timer')
     }
 }
 
 start()
-
-
-const startTest = async () => {
-    try {
-        await initializeData(openseaApiData)
-        
-        await requestAndUpdate(openseaApiData, openseaApiKeyList)
-    }
-    catch (err) {
-        console.log(err)
-    }
-    
-}
-
-// startTest()

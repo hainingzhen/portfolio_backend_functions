@@ -1,6 +1,5 @@
 const axios = require('axios');
-// const { v4: uuidv4 } = require('uuid');
-const { readFile, writeFile } = require('fs').promises;
+const { writeFile } = require('fs').promises;
 const updateToFirestore = require('../firebase-firestore/firestore')
 let Parser = require('rss-parser');
 let parser = new Parser();
@@ -8,10 +7,10 @@ let parser = new Parser();
 let currentData;
 
 // --- Entry Point: Called Once
-const initializeData = async (apiData) => {
+const initializeData = (apiData) => {
     try {
         // Initialize all of accounts in the list
-        const data = apiData.list.map((account) => {
+        currentData = apiData.list.map((account) => {
             return {
                 name: account.name,
                 accountId: account.accountId ? account.accountId : null,
@@ -22,7 +21,6 @@ const initializeData = async (apiData) => {
                 content: null,
             }
         });
-        await writeFile(apiData.requestInfo.filePath, JSON.stringify(data));
     }
     catch (error) {
         console.log("Initialisation error: ", error);
@@ -33,9 +31,6 @@ const initializeData = async (apiData) => {
 // --- Entry Point: Repeatedly Called
 const requestAndUpdate = async (apiData, apiKeyList) => {
     try {
-        // Read the current data from the JSON files
-        currentData = await readFile(apiData.requestInfo.filePath, 'utf8')
-        currentData = JSON.parse(currentData)
         let requestedData;
         // Run through the current list of accounts to make API requests
         for (let accountIndex = 0; accountIndex < apiData.list.length; accountIndex++) {
@@ -79,7 +74,6 @@ const request = async (apiData, accountIndex, apiKeyList) => {
                 if (lastRequestTime !== null){
                     apiQuery = `${account.name}&start_time=${lastRequestTime}&granularity=day`;
                     response = await axios.get(apiData.requestInfo.apiRoot[1].concat(apiQuery), config);
-                    console.log(response.data.meta.total_tweet_count)
                     if (response.status === 200 && response.data.meta.total_tweet_count === 0){
                         response = {
                             status: null
@@ -220,25 +214,23 @@ const update = async (apiData, accountIndex, requestedData) => {
                 break
         }
 
-        const newData = await compare(accountIndex, formattedContent)
+        const newData = compare(accountIndex, formattedContent)
 
         if (newData.length) {
-            console.log('New Data Obtained')
             currentData[accountIndex].lastEdited = new Date().toISOString()
             await updateToFirestore(newData)
-            console.log(newData)
         }
     }
-    catch (err) {
-        console.log("Update Error: ", err)
+    catch (error) {
+        console.log("Update Error: ", error)
     }
 }
 
 
-const compare = async (accountIndex, formattedContent) => {
+const compare = (accountIndex, formattedContent) => {
     try {
         const isArray = Array.isArray(formattedContent)
-        let currentDataToBeCompared = currentData[accountIndex].content
+        const currentDataToBeCompared = currentData[accountIndex].content
         currentData[accountIndex].content = formattedContent
         if (currentDataToBeCompared === null) {
             console.log('Initial Fill')
@@ -265,9 +257,10 @@ const compare = async (accountIndex, formattedContent) => {
         }
         return newData
     }
-    catch (err) {
-        console.log('Compare Error: ', err)
+    catch (error) {
+        console.log('Compare Error: ', error)
     }
 }
+
 
 module.exports = { requestAndUpdate, initializeData }
