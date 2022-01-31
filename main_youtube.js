@@ -1,7 +1,8 @@
 const { requestAndUpdate, initializeData } = require('./api_request/api')
 const { youtubeApiKeyList } = require('./api_keys')
 
-const youtubeApiData = {
+
+let youtubeApiData = {
     requestInfo: {
         platform: 'youtube',
         filePath: __dirname + '../api_result/youtube.json',
@@ -51,6 +52,7 @@ const youtubeApiData = {
         },
     ]
 }
+
 
 const start = () => {
     try {

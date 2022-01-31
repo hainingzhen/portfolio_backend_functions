@@ -1,7 +1,7 @@
 const { requestAndUpdate, initializeData } = require('./api_request/api')
 const { snapshotApiKeyList } = require('./api_keys')
 
-const snapshotApiData = {
+let snapshotApiData = {
     requestInfo: {
         platform: 'snapshot',
         filePath: __dirname + '/api_result/snapshot.json',

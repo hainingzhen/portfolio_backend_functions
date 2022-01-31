@@ -1,7 +1,7 @@
 const { requestAndUpdate, initializeData } = require('./api_request/api')
 const { twitterApiKeyList } = require('./api_keys')
 
-const twitterApiData = {
+let twitterApiData = {
     requestInfo: {
         platform: 'twitter',
         filePath: __dirname + '/api_result/twitter.json',

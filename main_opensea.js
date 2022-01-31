@@ -1,7 +1,7 @@
 const { requestAndUpdate, initializeData } = require('./api_request/api')
 const { openseaApiKeyList } = require('./api_keys')
 
-const openseaApiData = {
+let openseaApiData = {
     requestInfo: {
         platform: 'opensea',
         filePath: __dirname + '/api_result/opensea.json',

@@ -1,7 +1,8 @@
 const { requestAndUpdate, initializeData } = require('./api_request/api')
 const { mediumApiKeyList } = require('./api_keys')
 
-const mediumApiData = {
+
+let mediumApiData = {
     requestInfo: {
         platform: 'medium',
         filePath: __dirname + '/api_result/medium.json',
