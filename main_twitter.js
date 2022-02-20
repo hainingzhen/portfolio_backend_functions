@@ -1,5 +1,5 @@
 // const { requestAndUpdate, initializeData } = require('./api_request/api')
-const { firestoreListener } = require('./firebase-firestore/firestore')
+const { firestoreListener } = require('./funcs/all')
 const { twitterApiKeyList } = require('./api_keys')
 
 let twitterApiData = {
