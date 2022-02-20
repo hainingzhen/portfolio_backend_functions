@@ -1,4 +1,5 @@
-const { requestAndUpdate, initializeData } = require('./api_request/api')
+// const { requestAndUpdate, initializeData } = require('./api_request/api')
+const { firestoreListener } = require('./firebase-firestore/firestore')
 const { twitterApiKeyList } = require('./api_keys')
 
 let twitterApiData = {
@@ -9,60 +10,10 @@ let twitterApiData = {
             'https://api.twitter.com/2/users', 
             'https://api.twitter.com/2/tweets/counts/recent?query=from%3A'
         ],
-        timeOut: 2000
-    },
-    list: [
-        {
-            name: 'MichelleObama',
-            accountId: '409486555'
-        },
-        {
-            name: 'BarackObama',
-            accountId: '813286'
-        },
-        {
-            name: 'TEDTalks',
-            accountId: '15492359'
-        },
-        {
-            name: 'MarcusRashford',
-            accountId: '734492654755577858'
-        },
-        {
-            name: 'IGN',
-            accountId: '18927441'
-        },
-        {
-            name: 'novaramedia',
-            accountId: '601148365'
-        },
-        {
-            name: 'BBCBreaking',
-            accountId: '5402612'
-        },
-        {
-            name: 'coinbureau',
-            accountId: '906230721513181184'
-        },
-    ]
-}
-
-
-const start = () => {
-    try {
-        initializeData(twitterApiData)
-
-        console.time('Timer')
-        
-        setInterval(() => {
-            console.log('==== TWITTER ====')
-            console.timeLog('Timer')
-            requestAndUpdate(twitterApiData, twitterApiKeyList)
-        }, 120000)
-    }
-    catch (err) {
-        console.log(err)
+        timeOut: 2000,
+        requestInterval: 120000
     }
 }
 
-start()
+
+firestoreListener('twitter', twitterApiKeyList, twitterApiData)

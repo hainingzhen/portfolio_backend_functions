@@ -2,3 +2,8 @@
 /service_account
 api_keys.js
 .DS_Store
+/api_request
+/api_result
+/update
+._test.js
+.main_medium.js
